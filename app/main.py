@@ -1,6 +1,6 @@
 
 
-menu = ["Adicionar tarefa", "Remover tarefa", "Concluir tarefa", "Limpar lista de tarefas"]
+menu = ["Adicionar tarefa", "Remover tarefa", "Concluir tarefa", "Limpar lista de tarefas", "Encerrar aplicativo"]
 tarefas = ["Varrer a casa", "Dormir cedo", "Lavar roupa", "Limpar chao"]
 
 def mostrar_tarefas():
@@ -13,18 +13,18 @@ def mostrar_tarefas():
         print("     Lista vazia")
     print("---------------------")
     
+def mostrar_menu():
+    print("------- MENU -------")
+    for i, opcao in enumerate(menu):
+        print(f"{i + 1}) {opcao}")
+    print("---------------------")
 
 app_rodando = True
 while app_rodando:
     
     mostrar_tarefas()
-
-    print("------- MENU -------")
-    for i, opcao in enumerate(menu):
-        print(f"{i + 1}) {opcao}")
-    print("---------------------")
+    mostrar_menu()
     
-
     user = input("Escolha uma opção: ")
     try:
         user = int(user)
@@ -52,10 +52,13 @@ while app_rodando:
         if len(nv_tarefa) <= 0:
             print("Dígito inválido! Tente novamente. (ERROR 406)")
             continue
+        
+        if nv_tarefa.isspace() == True:
+            print("Dígito inválido! Tente novamente. (ERROR 406)")
+            continue
 
         tarefas.append(nv_tarefa)
 
-            
     elif user == 2:
         rm_tarefa = input("Informe o número da tarefa a ser removida: ")
         try:
@@ -63,6 +66,10 @@ while app_rodando:
 
         except ValueError:
             print("Dígito inválido! Tente novamente. (ERROR 406)")
+            continue
+
+        if rm_tarefa < 1 or rm_tarefa > len(tarefas)  :
+            print("Opção inexiste! Tente novamente. (ERROR 404)")
             continue
 
         for id, it in enumerate(tarefas):
@@ -78,11 +85,14 @@ while app_rodando:
         except ValueError:
             print("Dígito inválido! Tente novamente. (ERROR 406)")
             continue
-        
+
+        if ok_tarefa < 1 or ok_tarefa > len(tarefas)  :
+            print("Opção inexiste! Tente novamente. (ERROR 404)")
+            continue
+
         for id, it in enumerate(tarefas):
             if ok_tarefa == id + 1:
                 tarefas[id] += " = OK"
-
 
     elif user == 4:
         print("Limpando lista de tarefas...")
@@ -101,5 +111,22 @@ while app_rodando:
             print("Opção inválida! Tente novamente. (ERROR 404)")
             continue
     
+    elif user == 5:
+        print("Encerrando atividades...")
+        off_tarefa = input("Tem certeza que deseja encerrar o aplicativo? (y/n) : ")
+        off_tarefa = off_tarefa.lower()
+        if off_tarefa == "n":
+            print("---------------------")
+            print("Solicitação de encerramento cancelada.")
+            continue
+        elif off_tarefa == "y":
+            print("---------------------")
+            print("Aplicativo encerrado.")
+            app_rodando = False
+            break
+        else:
+            print("Opção inválida! Tente novamente. (ERROR 404)")
+            continue
+
 
 
