@@ -26,7 +26,17 @@ while app_rodando:
     
 
     user = input("Escolha uma opção: ")
-    user = int(user)
+    try:
+        user = int(user)
+                    
+    except ValueError:
+        print("Dígito inválido! Tente novamente.")
+        continue
+
+    if user > len(menu) or user < 1:
+        print("Opção inexiste! Tente novamente.")
+        continue
+    
     print("---------------------")
     if user == 1:
         nv_tarefa = input("Informe a tarefa a ser adicionada: ")
@@ -44,13 +54,9 @@ while app_rodando:
             for id, it in enumerate(tarefas):
                 if ok_tarefa == id + 1:
                     tarefas[id] += " = OK"
-                   
-            
-
-            
 
 
-        #elif user == 4:
+       
 
 
 
