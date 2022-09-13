@@ -1,4 +1,3 @@
-
 menu = ["Adicionar tarefa", "Remover tarefa", "Concluir tarefa", "Limpar lista de tarefas", "Encerrar aplicativo"]
 tarefas = ["Varrer a casa", "Dormir cedo", "Lavar roupa", "Limpar chao"]
 
@@ -25,34 +24,26 @@ while app_rodando:
     mostrar_menu()
     
     user = input("Escolha uma opção: ")
-    try:
-        user = int(user)
-        
-    except ValueError:
-        print("Dígito inválido! Tente novamente. (ERROR 406)")
-        continue
 
-    if user > len(menu) or user < 1:
-        print("Opção inexiste! Tente novamente. (ERROR 404)")
-        continue
+    if user.isdigit():
+        user = int(user)
+
+        if user > len(menu) or user < 1:
+          print("Opção inexiste! Tente novamente. (ERROR 404)")
 
     print("---------------------")
     if user == 1:
         nv_tarefa = input("Informe a tarefa a ser adicionada: ")
         numero = False
-        try:
+
+        if nv_tarefa.isdigit():
             nv_tarefa = int(nv_tarefa)
-            numero = True
-            print("Dígito inválido! Tente novamente. (ERROR 406)")
-            continue
-        except:
-            pass
         
         if not len(nv_tarefa):
             print("Dígito inválido! Tente novamente. (ERROR 406)")
             continue
         
-        if nv_tarefa.isspace(): # == True:
+        if nv_tarefa.isspace():
             print("Dígito inválido! Tente novamente. (ERROR 406)")
             continue
 
@@ -60,10 +51,10 @@ while app_rodando:
 
     elif user == 2:
         rm_tarefa = input("Informe o número da tarefa a ser removida: ")
-        try:
-            rm_tarefa = int(rm_tarefa)
 
-        except ValueError:
+        if rm_tarefa.isdigit():
+            rm_tarefa = int(rm_tarefa)
+        else:
             print("Dígito inválido! Tente novamente. (ERROR 406)")
             continue
 
@@ -72,22 +63,21 @@ while app_rodando:
             continue
 
         tarefas.pop(rm_tarefa-1)
-        
 
     elif user == 3:
         ok_tarefa = input("Informe o número da tarefa a ser concluida: ")
-        try:
-            ok_tarefa = int(ok_tarefa)
 
-        except ValueError:
+        if ok_tarefa.isdigit():
+            ok_tarefa = int(ok_tarefa)
+        else:
             print("Dígito inválido! Tente novamente. (ERROR 406)")
             continue
 
         if ok_tarefa < 1 or ok_tarefa > len(tarefas)  :
             print("Opção inexiste! Tente novamente. (ERROR 404)")
             continue
-
-        tarefas[ok_tarefa - 1] += " = OK"
+        
+        tarefas[ok_tarefa-1] += " = OK"
 
     elif user == 4:
         print("Limpando lista de tarefas...")
