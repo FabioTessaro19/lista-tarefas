@@ -1,6 +1,6 @@
 
 from tkinter import *
-from turtle import color
+from tkinter import messagebox
 
 
 app_rodando = True
@@ -27,12 +27,8 @@ class Aplicativo:
             font = self.fontePadrao,
             width = 15, height = 2, border= 5)
         self.nvTarefa.place(x=20, y=60)
-        #####
-        self.addTarefa = Entry()
-        self.addTarefa.bind("<Button-1>")
-        self.addTarefa.place(x = 900, y = 150)
-
-
+        self.nvTarefa["command"] = self.adicionarTarefa
+        
 
         self.rmTarefa = Button(
             text = "Remover Tarefa",
@@ -65,11 +61,58 @@ class Aplicativo:
             highlightcolor="grey", highlightbackground="grey", highlightthickness= 3)
         self.listaTarefas.insert(0 ,"Varrer a casa", "Dormir cedo", "Lavar roupa", "Limpar chao")
         self.listaTarefas.place(x= 20, y=150)
-        
-
+    
         return None
 
-    #def adicionarTarefa(self, event):
+    def adicionarTarefa(self):
+        self.addTarefa = Label(
+            text="Adicionando Tarefa...",
+            font= ("Arial", "13", "bold"),
+            bg="light green", width=37, height=2)
+        self.addTarefa.place(x=750, y=150)
+        
+        self.boxTarefa = Text(
+            font= self.fontePadrao,
+            width= 40, height= 8, border=4,
+            highlightcolor="light green", highlightbackground="light green", highlightthickness= 3)
+        self.boxTarefa.place(x=750, y=190)
+
+        self.confTarefa = Button(
+            text="Adicionar", font = self.fontePadrao,
+            width = 10, height = 2, border= 3)
+        self.confTarefa.place(x=820, y=370)
+        self.confTarefa["command"] = self.addBox
+
+        self.lpTarefa = Button(
+            text="Limpar", font = self.fontePadrao,
+            width = 10, height = 2, border= 3)
+        self.lpTarefa.place(x=950, y=370)
+        self.lpTarefa["command"] = self.limparBox
+        
+    def limparBox(self):
+        self.boxTarefa.delete(1.0, END)
+
+    def addBox(self):
+        userInput = self.boxTarefa.get(1.0, "end-1c")
+        
+        for i in userInput:
+            if i.isdigit():
+                messagebox.showinfo("Informação", "Não são permitidos números. Tente novamente.")
+                return 
+
+        if userInput.isspace():
+            messagebox.showinfo("Informação", "Espaço vazio. Tente novamente.")
+            return
+
+        if len(userInput) == 0:
+            return messagebox.showinfo("Informação", "Espaço vazio. Tente novamente.")
+            
+        self.listaTarefas.insert(END, userInput)
+            
+        
+        
+        
+        
 
 
 
