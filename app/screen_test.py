@@ -2,18 +2,18 @@
 from tkinter import *
 from tkinter import messagebox
 
-
-app_rodando = True
 root = Tk()
 root.title("Lista de Tarefas")
-root.geometry("1280x900")
+root.geometry("1200x900")
+
+root.resizable(0,0)
 root.config(background= "#DAFAF4")
 
-
 class Aplicativo:
+    aberto = False
     def __init__(self):
         self.fontePadrao = ("Arial", "12", "bold")
-    
+        
         self.titulo = Label()
         self.titulo["text"] ="Aplicativo de Lista de Tarefas"
         self.titulo["font"] = ("Arial", "14", "bold")
@@ -80,45 +80,51 @@ class Aplicativo:
         return None
 
     def adicionarTarefa(self):
-        self.addTarefa = Label(
-            text="Adicionando Tarefa...",
-            font= ("Arial", "13", "bold"),
-            bg="yellow", width=37, height=2)
-        self.addTarefa.place(x=750, y=150)
-        
-        self.boxTarefa = Text(
-            font= self.fontePadrao,
-            width= 40, height= 8, border=4,
-            highlightcolor="yellow", highlightbackground="yellow", highlightthickness= 3)
-        self.boxTarefa.place(x=750, y=190)
+     
+        if Aplicativo.aberto == False:
+            self.addTarefa = Label(
+                text="Adicionando Tarefa...",
+                font= ("Arial", "13", "bold"),
+                bg="yellow", width=37, height=2)
+            self.addTarefa.place(x=750, y=150)
+            
+            self.boxTarefa = Text(
+                font= self.fontePadrao,
+                width= 40, height= 8, border=4,
+                highlightcolor="yellow", highlightbackground="yellow", highlightthickness= 3)
+            self.boxTarefa.place(x=750, y=190)
 
-        self.confTarefa = Button(
-            text="Adicionar", font = self.fontePadrao,
-            width = 10, height = 2, border= 3)
-        self.confTarefa.place(x=770, y=370)
-        self.confTarefa["command"] = self.addBox
+            self.confTarefa = Button(
+                text="Adicionar", font = self.fontePadrao,
+                width = 10, height = 2, border= 3)
+            self.confTarefa.place(x=770, y=370)
+            self.confTarefa["command"] = self.addBox
 
-        self.lpTarefa = Button(
-            text="Limpar", font = self.fontePadrao,
-            width = 10, height = 2, border= 3)
-        self.lpTarefa.place(x=900, y=370)
-        self.lpTarefa["command"] = self.limparBox
+            self.lpTarefa = Button(
+                text="Limpar", font = self.fontePadrao,
+                width = 10, height = 2, border= 3)
+            self.lpTarefa.place(x=900, y=370)
+            self.lpTarefa["command"] = self.limparBox
 
-        self.escTarefa = Button(
-            text="Esc",font=self.fontePadrao,
-            width=5, height=2, border=3)
-        self.escTarefa.place(x= 1030, y=370)
-        self.escTarefa["command"] = self.closeBox
-        
+            self.escTarefa = Button(
+                text="Esc",font=self.fontePadrao,
+                width=5, height=2, border=3)
+            self.escTarefa.place(x= 1030, y=370)
+            self.escTarefa["command"] = self.closeBox
+
+            Aplicativo.aberto = True
+    
     def limparBox(self):
         self.boxTarefa.delete(1.0, END)
 
     def closeBox(self):
-        self.addTarefa.destroy()
-        self.boxTarefa.destroy()
-        self.confTarefa.destroy()
-        self.lpTarefa.destroy()
-        self.escTarefa.destroy()
+        self.addTarefa.place_forget()
+        self.boxTarefa.place_forget()
+        self.confTarefa.place_forget()
+        self.lpTarefa.place_forget()
+        self.escTarefa.place_forget()
+        Aplicativo.aberto = False
+    
         return
 
     def addBox(self):
@@ -141,6 +147,9 @@ class Aplicativo:
         self.boxTarefa.delete(1.0, END)
             
     def removeTarefa(self):
+        if not self.listaTarefas.curselection():
+            messagebox.showinfo("Informação", "Selecione uma tarefa para remove-lá.")
+            
         self.listaTarefas.get(self.listaTarefas.curselection())
         resposta = messagebox.askquestion("Atenção", "Tem certeza que deseja remover essa tarefa?")
         
@@ -148,58 +157,72 @@ class Aplicativo:
             self.listaTarefas.delete(self.listaTarefas.curselection())
 
     def concluiTarefa(self):
+        if not self.listaTarefas.curselection():
+            messagebox.showinfo("Informação", "Selecione uma tarefa para conclui-lá.")
+
         self.okTarefaDois.insert(0, self.listaTarefas.get(self.listaTarefas.curselection()))
         self.listaTarefas.delete(self.listaTarefas.curselection())
 
     def cleanLists(self):
-        msgbox = Toplevel()
-        msgbox.geometry("400x120")
+        msgbox = Toplevel(root)
         msgbox.title("Atenção")
-        self.tituloDois = Label(msgbox, text="Qual lista você deseja limpar?")
-        self.tituloDois.place(x= 160, y=20)
+        msgbox.config(background = "#ffffff")
+        msgbox.resizable(0,0)
+        x_position = 780
+        y_position = 470
+        msgbox.geometry(f"400x120+{x_position}+{y_position}")
+        msgbox.grab_set()
+        self.iconeUm = PhotoImage(file="C:/Users/Fabio/lista-tarefas/app/images/icon.PNG")
+        self.iconeTest = Label(msgbox, image= self.iconeUm, bg="#ffffff")
+        self.iconeTest.place(x=100, y=23)
+        
+        self.tituloDois = Label(msgbox, text="Qual lista você deseja limpar?", background="#ffffff")
+        self.tituloDois.place(x= 160, y=30)
+
+        self.barra = Label(msgbox, width=57, height=3, background="#f0f0f0")
+        self.barra.place(x=0, y=75)
 
         self.cleanAllLists = Button(
             msgbox, font=("Arial", "9"), 
-            text="Ambas as listas", height=1)
-        self.cleanAllLists.place(x= 15, y=80)
-        self.cleanAllLists["command"] = self.allLists
+            text="Ambas as listas")
+        self.cleanAllLists.place(x= 15, y=85)
+        self.cleanAllLists["command"] = lambda: self.allList(msgbox)
         
-
         self.cleanMainList = Button(
             msgbox, font=("Arial", "9"), 
-            text="Tarefas", height=1)
-        self.cleanMainList.place(x= 126, y=80)
-        self.cleanMainList["command"] = self.listaTarefas.delete(0, END)
-
+            text="Tarefas")
+        self.cleanMainList.place(x= 126, y=85)
+        self.cleanMainList["command"] = lambda: self.mainList(msgbox)
+        
         self.cleanSecondList = Button(
             msgbox, font=("Arial", "9"), 
-            text="Tarefas Concluídas", height=1)
-        self.cleanSecondList.place(x=190, y=80)
-        self.cleanSecondList["command"] = self.okTarefaDois.delete(0, END)
+            text="Tarefas Concluídas")
+        self.cleanSecondList.place(x=190, y=85)
+        self.cleanSecondList["command"] = lambda: self.secondList(msgbox)
         
         self.cleanCancel = Button(
             msgbox, font=("Arial", "9"), 
-            text="Cancelar", height=1)
-        self.cleanCancel.place(x=320, y=80)
+            text="Cancelar")
+        self.cleanCancel.place(x=320, y=85)
         self.cleanCancel["command"] = msgbox.destroy
+    
 
-    def allLists(self):
+    def allList(self, msgbox):
         self.listaTarefas.delete(0, END)
         self.okTarefaDois.delete(0, END)
-
-        #emptyList = self.listaTarefas.index("end")
-        #if emptyList == 0:
-        #    messagebox.showinfo("Informação", "Lista já esta vazia.")
-        #    return
-
-        #respostaDois = messagebox.askyesno("Atenção", "Você deseja limpar a lista de tarefas concluídas também?")
+        msgbox.grab_release()
+        msgbox.destroy()
         
-        #if respostaDois == True:
-        #    self.listaTarefas.delete(0, END)
-        #    self.okTarefaDois.delete(0, END)
-        #else:
-        #    self.listaTarefas.delete(0, END)
-
+    def mainList(self, msgbox):
+        self.listaTarefas.delete(0, END)
+        msgbox.grab_release()
+        msgbox.destroy()
+        
+    def secondList(self, msgbox):
+        self.okTarefaDois.delete(0, END)
+        msgbox.grab_release()
+        msgbox.destroy()
 
 Aplicativo()
 root.mainloop()
+
