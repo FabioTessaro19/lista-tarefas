@@ -1,6 +1,9 @@
 
+import json
 from tkinter import *
 from tkinter import messagebox
+from tkinter.filedialog import asksaveasfile
+import pygame
 
 root = Tk()
 root.title("Lista de Tarefas")
@@ -8,6 +11,8 @@ root.geometry("1200x900")
 
 root.resizable(0,0)
 root.config(background= "#DAFAF4")
+
+pygame.mixer.init()
 
 class Aplicativo:
     aberto = False
@@ -74,8 +79,14 @@ class Aplicativo:
             font= ("Arial", "18"),
             width=50, height=25, border = 4,
             highlightcolor="grey", highlightbackground="grey", highlightthickness= 3)
-        self.listaTarefas.insert(0 ,"Varrer a casa", "Dormir cedo", "Lavar roupa", "Limpar chao")
+        #self.listaTarefas.insert(0 ,"Varrer a casa", "Dormir cedo", "Lavar roupa", "Limpar chao")
         self.listaTarefas.place(x= 20, y=150)
+
+        self.saveButton = Button(
+            text="Salvar", font=self.fontePadrao,
+            width = 10, height = 2, border= 5)
+        self.saveButton.place(x=1020, y=60)
+        self.saveButton["command"] = self.saveFile 
 
         return None
 
@@ -172,9 +183,15 @@ class Aplicativo:
         y_position = 470
         msgbox.geometry(f"400x120+{x_position}+{y_position}")
         msgbox.grab_set()
+        
+        pygame.mixer.music.load("D:/Users/v3nd4/python_downloader_videos/sound_exit_ok.mp3")
+        pygame.mixer.music.play(loops = 0)
+
         self.iconeUm = PhotoImage(file="C:/Users/Fabio/lista-tarefas/app/images/icon.PNG")
         self.iconeTest = Label(msgbox, image= self.iconeUm, bg="#ffffff")
         self.iconeTest.place(x=100, y=23)
+
+        
         
         self.tituloDois = Label(msgbox, text="Qual lista você deseja limpar?", background="#ffffff")
         self.tituloDois.place(x= 160, y=30)
@@ -205,7 +222,6 @@ class Aplicativo:
             text="Cancelar")
         self.cleanCancel.place(x=320, y=85)
         self.cleanCancel["command"] = msgbox.destroy
-    
 
     def allList(self, msgbox):
         self.listaTarefas.delete(0, END)
@@ -223,6 +239,14 @@ class Aplicativo:
         msgbox.grab_release()
         msgbox.destroy()
 
+    def saveFile(self):
+        nameFile = asksaveasfile(mode="w", defaultextension= json)
+        textList = self.listaTarefas.get(1.0, END)
+        nameFile.write(textList)
+        nameFile.close()
+        
+
 Aplicativo()
 root.mainloop()
+
 
