@@ -1,14 +1,15 @@
 
-import json
+import pickle
 from tkinter import *
 from tkinter import messagebox
-from tkinter.filedialog import asksaveasfile
+from tkinter import filedialog
 import pygame
 
 root = Tk()
 root.title("Lista de Tarefas")
 root.geometry("1200x900")
 
+root.iconphoto(True, PhotoImage(file="C:/Users/Fabio/lista-tarefas/app/images/icon_exe.png"))
 root.resizable(0,0)
 root.config(background= "#DAFAF4")
 
@@ -34,7 +35,6 @@ class Aplicativo:
         self.nvTarefa.place(x=20, y=60)
         self.nvTarefa["command"] = self.adicionarTarefa
         
-
         self.rmTarefa = Button(
             text = "Remover Tarefa",
             font = self.fontePadrao,
@@ -79,14 +79,19 @@ class Aplicativo:
             font= ("Arial", "18"),
             width=50, height=25, border = 4,
             highlightcolor="grey", highlightbackground="grey", highlightthickness= 3)
-        #self.listaTarefas.insert(0 ,"Varrer a casa", "Dormir cedo", "Lavar roupa", "Limpar chao")
         self.listaTarefas.place(x= 20, y=150)
 
         self.saveButton = Button(
             text="Salvar", font=self.fontePadrao,
             width = 10, height = 2, border= 5)
-        self.saveButton.place(x=1020, y=60)
-        self.saveButton["command"] = self.saveFile 
+        self.saveButton.place(x=1020, y=130)
+        self.saveButton["command"] = self.saveFile
+
+        self.openButton = Button(
+            text="Abrir", font=self.fontePadrao,
+            width = 10, height = 2, border= 5)
+        self.openButton.place(x=1020, y=60)
+        self.openButton["command"] = self.openFile
 
         return None
 
@@ -97,30 +102,30 @@ class Aplicativo:
                 text="Adicionando Tarefa...",
                 font= ("Arial", "13", "bold"),
                 bg="yellow", width=37, height=2)
-            self.addTarefa.place(x=750, y=150)
+            self.addTarefa.place(x=750, y=210)
             
             self.boxTarefa = Text(
                 font= self.fontePadrao,
                 width= 40, height= 8, border=4,
                 highlightcolor="yellow", highlightbackground="yellow", highlightthickness= 3)
-            self.boxTarefa.place(x=750, y=190)
+            self.boxTarefa.place(x=750, y=250)
 
             self.confTarefa = Button(
                 text="Adicionar", font = self.fontePadrao,
                 width = 10, height = 2, border= 3)
-            self.confTarefa.place(x=770, y=370)
+            self.confTarefa.place(x=770, y=430)
             self.confTarefa["command"] = self.addBox
 
             self.lpTarefa = Button(
                 text="Limpar", font = self.fontePadrao,
                 width = 10, height = 2, border= 3)
-            self.lpTarefa.place(x=900, y=370)
+            self.lpTarefa.place(x=900, y=430)
             self.lpTarefa["command"] = self.limparBox
 
             self.escTarefa = Button(
                 text="Esc",font=self.fontePadrao,
                 width=5, height=2, border=3)
-            self.escTarefa.place(x= 1030, y=370)
+            self.escTarefa.place(x= 1030, y=430)
             self.escTarefa["command"] = self.closeBox
 
             Aplicativo.aberto = True
@@ -191,8 +196,6 @@ class Aplicativo:
         self.iconeTest = Label(msgbox, image= self.iconeUm, bg="#ffffff")
         self.iconeTest.place(x=100, y=23)
 
-        
-        
         self.tituloDois = Label(msgbox, text="Qual lista você deseja limpar?", background="#ffffff")
         self.tituloDois.place(x= 160, y=30)
 
@@ -240,12 +243,49 @@ class Aplicativo:
         msgbox.destroy()
 
     def saveFile(self):
-        nameFile = asksaveasfile(mode="w", defaultextension= json)
-        textList = self.listaTarefas.get(1.0, END)
-        nameFile.write(textList)
-        nameFile.close()
-        
+        print("funcionou")
+        file_name = filedialog.asksaveasfilename(
+            initialdir="C:/Users/ListaTarefas_arquivos",
+            title="Save File", filetypes=(("Dat Files", "*.dat"), ("All Files", "*.*"))
+        )
 
+        if file_name:
+            if file_name.endswith(".dat"):
+                pass
+            else:
+                file_name = f'{file_name}.dat'
+
+        tarefas = self.listaTarefas.get(0, END)
+        concluidas = self.okTarefaDois.get(0, END)
+
+        output_file = open(file_name, 'wb')
+
+        pickle.dump(tarefas, output_file)
+        pickle.dump(concluidas, output_file)
+
+
+    def openFile(self):
+        print("funcionou tbm")
+        file_name = filedialog.askopenfilename(
+            initialdir="C:/Users/ListaTarefas_arquivos",
+            title="Open File", filetypes=(("Dat Files", "*.dat"), ("All Files", "*.*"))
+        )
+
+        if file_name:
+            self.listaTarefas.delete(0, END)
+            self.okTarefaDois.delete(0, END)
+            
+            input_file = open(file_name, 'rb')
+
+            tarefas = pickle.load(input_file)
+            concluidas = pickle.load(input_file)
+
+            for item in tarefas:
+                self.listaTarefas.insert(END, item)
+
+            for item in concluidas:
+                self.okTarefaDois.insert(END, item)
+            
 Aplicativo()
 root.mainloop()
 
