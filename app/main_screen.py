@@ -9,7 +9,7 @@ root = Tk()
 root.title("Lista de Tarefas")
 root.geometry("1200x900")
 
-root.iconphoto(True, PhotoImage(file="C:/Users/Fabio/lista-tarefas/app/images/icon_exe.png"))
+root.iconphoto(True, PhotoImage(file="C:/Users/Fabio/Coding/lista-tarefas/app/images/icon_exe.png"))
 root.resizable(0,0)
 root.config(background= "#DAFAF4")
 
@@ -192,7 +192,7 @@ class Aplicativo:
         pygame.mixer.music.load("D:/Users/v3nd4/python_downloader_videos/sound_exit_ok.mp3")
         pygame.mixer.music.play(loops = 0)
 
-        self.iconeUm = PhotoImage(file="C:/Users/Fabio/lista-tarefas/app/images/icon.PNG")
+        self.iconeUm = PhotoImage(file="C:/Users/Fabio/Coding/lista-tarefas/app/images/icon.PNG")
         self.iconeTest = Label(msgbox, image= self.iconeUm, bg="#ffffff")
         self.iconeTest.place(x=100, y=23)
 
@@ -243,11 +243,9 @@ class Aplicativo:
         msgbox.destroy()
 
     def saveFile(self):
-        print("funcionou")
         file_name = filedialog.asksaveasfilename(
             initialdir="C:/Users/ListaTarefas_arquivos",
-            title="Save File", filetypes=(("Dat Files", "*.dat"), ("All Files", "*.*"))
-        )
+            title="Save File", filetypes=(("Dat Files", "*.dat"), ("All Files", "*.*")))
 
         if file_name:
             if file_name.endswith(".dat"):
@@ -263,13 +261,10 @@ class Aplicativo:
         pickle.dump(tarefas, output_file)
         pickle.dump(concluidas, output_file)
 
-
     def openFile(self):
-        print("funcionou tbm")
         file_name = filedialog.askopenfilename(
             initialdir="C:/Users/ListaTarefas_arquivos",
-            title="Open File", filetypes=(("Dat Files", "*.dat"), ("All Files", "*.*"))
-        )
+            title="Open File", filetypes=(("Dat Files", "*.dat"), ("All Files", "*.*")))
 
         if file_name:
             self.listaTarefas.delete(0, END)
